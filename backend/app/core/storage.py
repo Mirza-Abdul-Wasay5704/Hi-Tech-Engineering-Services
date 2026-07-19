@@ -52,7 +52,9 @@ def store_image(data: bytes, filename: str, kind: str = "photo") -> str:
             f"{settings.supabase_url}/storage/v1/object/{settings.supabase_bucket}/{key}",
             content=processed,
             headers={
+                # works with both legacy service_role JWTs and the new sb_secret_ keys
                 "Authorization": f"Bearer {settings.supabase_service_key}",
+                "apikey": settings.supabase_service_key,
                 "Content-Type": content_type,
                 "x-upsert": "true",
             },
