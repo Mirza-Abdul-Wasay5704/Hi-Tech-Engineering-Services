@@ -12,6 +12,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { Counter } from "./motion";
+import ElevatorCanvas from "./three/ElevatorCanvas";
 import type { SiteSettings } from "@/lib/types";
 
 /* Car geometry (SVG coords): car top Y at each served floor. */
@@ -32,8 +33,8 @@ export default function HomeHero({ settings }: { settings: SiteSettings }) {
       <section className="relative min-h-screen pt-16 lg:sticky lg:top-0 lg:h-screen lg:overflow-hidden">
         <div className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-6xl items-center gap-10 px-5 py-12 lg:h-[calc(100vh-4rem)] lg:min-h-0 lg:grid-cols-[1.05fr_0.95fr]">
           <HeroCopy settings={settings} words={words} p={p} reduce={!!reduce} />
-          <div className="relative hidden h-[82vh] max-h-[640px] lg:block">
-            <ShaftSection p={p} reduce={!!reduce} />
+          <div className="relative hidden h-[82vh] max-h-[660px] lg:block">
+            {reduce ? <ShaftSection p={p} reduce /> : <ElevatorCanvas p={p} />}
           </div>
         </div>
 
