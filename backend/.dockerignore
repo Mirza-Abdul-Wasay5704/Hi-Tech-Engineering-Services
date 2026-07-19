@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+hitech.db
+_test_fresh.db
+uploads/
+uvicorn.log
+*.log
