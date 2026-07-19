@@ -1,0 +1,408 @@
+@import "tailwindcss";
+
+/* ============================================================
+   HI-TECH ENGINEERING SERVICES — "The Building in Section"
+   Machine-room materials: steel paper, enamel green, brass.
+   ============================================================ */
+
+:root {
+  --paper: #eff1ee;
+  --panel: #fbfbf9;
+  --ink: #171d1a;
+  --muted: #5a655f;
+  --line: #c9cfc9;
+  --line-strong: #171d1a;
+  --green: #1e5c46;
+  --green-deep: #123b2d;
+  --green-wash: #e2e9e3;
+  --brass: #96793d;
+  --signal: #b3261e;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-green: var(--green);
+  --color-green-deep: var(--green-deep);
+  --color-brass: var(--brass);
+  --font-sans: var(--font-archivo);
+  --font-display: var(--font-big-shoulders);
+  --font-mono: var(--font-plex-mono);
+}
+
+@layer base {
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-archivo), system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-big-shoulders), var(--font-archivo), sans-serif;
+  }
+}
+
+/* Display headings: tall, condensed, uppercase — signage voice */
+.display {
+  font-family: var(--font-big-shoulders), sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  line-height: 0.94;
+}
+
+::selection {
+  background: var(--green);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* ---------- Floor landing system (signature) ----------
+   Each section opens with a "landing": a strong rule that reads
+   like a floor line on an elevation drawing, carrying a brass
+   floor plate and a mono label. */
+.landing {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  border-top: 2px solid var(--line-strong);
+  padding-top: 0.85rem;
+}
+.floor-plate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  height: 1.7rem;
+  padding: 0 0.45rem;
+  border: 1.5px solid var(--brass);
+  border-radius: 2px;
+  color: var(--brass);
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+.landing-label {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Small mono caption (data-plate voice) */
+.mono-tag {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+/* ---------- Plates (cards) ---------- */
+.plate {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.plate:hover {
+  border-color: var(--green);
+  box-shadow: 0 2px 0 0 var(--green);
+}
+.plate-static {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+
+/* Deep-green enamel band (inverted sections) */
+.enamel {
+  background: var(--green-deep);
+  color: #e9eee9;
+}
+.enamel .landing {
+  border-top-color: #e9eee9;
+}
+.enamel .landing-label {
+  color: #a9bcb0;
+}
+.enamel .plate,
+.enamel .plate-static {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(233, 238, 233, 0.22);
+}
+.enamel .plate:hover {
+  border-color: var(--brass);
+  box-shadow: 0 2px 0 0 var(--brass);
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--green);
+  color: #f4f6f2;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 2px;
+  overflow: hidden;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+/* brass shine sweeps across on hover */
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(245, 220, 150, 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+}
+.btn-primary:hover {
+  background: var(--green-deep);
+  box-shadow: 0 3px 0 0 var(--brass);
+  transform: translateY(-1px);
+}
+.btn-primary:hover::after {
+  transform: translateX(120%);
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 2px;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-wash);
+}
+.enamel .btn-primary {
+  background: #f0f3ee;
+  color: var(--green-deep);
+}
+.enamel .btn-primary:hover {
+  background: #ffffff;
+  box-shadow: 0 3px 0 0 var(--brass);
+}
+.enamel .btn-ghost {
+  border-color: #e9eee9;
+  color: #e9eee9;
+}
+.enamel .btn-ghost:hover {
+  border-color: var(--brass);
+  color: var(--brass);
+  background: transparent;
+}
+
+/* ---------- Form fields ---------- */
+.field {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.7rem 0.9rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.field:focus {
+  border-color: var(--green);
+  box-shadow: 0 1px 0 0 var(--green);
+}
+.field::placeholder {
+  color: color-mix(in srgb, var(--muted) 65%, transparent);
+}
+
+/* ---------- Hero elevation drawing ---------- */
+@keyframes car-travel {
+  0%,
+  8% {
+    transform: translateY(0);
+  }
+  38%,
+  50% {
+    transform: translateY(-88px);
+  }
+  80%,
+  92% {
+    transform: translateY(-264px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes cwt-travel {
+  0%,
+  8% {
+    transform: translateY(0);
+  }
+  38%,
+  50% {
+    transform: translateY(88px);
+  }
+  80%,
+  92% {
+    transform: translateY(264px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.shaft-car {
+  animation: car-travel 14s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+.shaft-cwt {
+  animation: cwt-travel 14s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+/* ---------- Logo marquee ---------- */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+.logo-tile img {
+  filter: grayscale(1) contrast(0.9);
+  opacity: 0.75;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+.logo-tile:hover img {
+  filter: none;
+  opacity: 1;
+}
+
+/* ---------- Prose (blog / service bodies) ---------- */
+.prose-body {
+  color: var(--ink);
+  line-height: 1.75;
+}
+.prose-body h2,
+.prose-body h3 {
+  font-family: var(--font-big-shoulders), sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1;
+}
+.prose-body h2 {
+  font-size: 1.7rem;
+  margin: 2.4rem 0 0.9rem;
+  padding-top: 0.8rem;
+  border-top: 2px solid var(--line-strong);
+}
+.prose-body h3 {
+  font-size: 1.3rem;
+  margin: 1.8rem 0 0.7rem;
+}
+.prose-body p {
+  margin: 0.9rem 0;
+  color: color-mix(in srgb, var(--ink) 88%, var(--muted));
+}
+.prose-body ul,
+.prose-body ol {
+  margin: 0.9rem 0 0.9rem 1.4rem;
+  list-style: disc;
+}
+.prose-body ol {
+  list-style: decimal;
+}
+.prose-body li {
+  margin: 0.35rem 0;
+}
+.prose-body a {
+  color: var(--green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-body strong {
+  color: var(--ink);
+}
+.prose-body blockquote {
+  border-left: 3px solid var(--brass);
+  padding-left: 1rem;
+  color: var(--muted);
+  margin: 1.2rem 0;
+}
+.prose-body code {
+  font-family: var(--font-plex-mono), monospace;
+  background: var(--green-wash);
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+  font-size: 0.9em;
+}
+
+/* ---------- Legacy aliases (admin panel only) ----------
+   The internal admin UI still references the old token names;
+   map them onto the new palette rather than restyling it. */
+:root {
+  --bg: var(--paper);
+  --surface: var(--panel);
+  --surface-2: var(--green-wash);
+  --accent: var(--green);
+  --text: var(--ink);
+  --font-space-grotesk: var(--font-big-shoulders);
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.section-tag {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.prose-dark {
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+  }
+  .shaft-car,
+  .shaft-cwt {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(command -v python py pdftotext mutool)",
+      "Bash(pdftotext -layout \"HI-TECH ENGINEERING SERVICES PORTFOLIO.pdf\" -)",
+      "Bash(npm -v)",
+      "Bash(git --version)"
+    ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  }
+}
