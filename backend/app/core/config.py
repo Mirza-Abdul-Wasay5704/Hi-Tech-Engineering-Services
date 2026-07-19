@@ -29,7 +29,9 @@ class Settings(BaseSettings):
     # Resend email (optional — lead emails skipped when unset)
     resend_api_key: str = ""
     lead_notify_email: str = "hi.techengineering1971@gmail.com"
-    lead_from_email: str = "leads@hitechengineering.com"
+    # Resend's shared sender works with no domain verification. Once you verify
+    # your own domain in Resend, override this env var with e.g. leads@yourdomain.com.
+    lead_from_email: str = "onboarding@resend.dev"
 
     class Config:
         env_file = ".env"
