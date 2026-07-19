@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -15,18 +16,23 @@ from .routers import auth, blog, leads, misc, projects, services
 from .routers.leads import limiter
 from .seed import seed_if_empty
 
+# Vercel (and other serverless hosts) run with a read-only filesystem and a
+# pre-seeded database, so we skip DB bootstrap/seeding and the local uploads mount there.
+SERVERLESS = bool(os.environ.get("VERCEL"))
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
-    try:
-        if not db.query(AdminUser).first():
-            db.add(AdminUser(email=settings.admin_email.lower(), hashed_password=hash_password(settings.admin_password)))
-            db.commit()
-        seed_if_empty(db)
-    finally:
-        db.close()
+    if not SERVERLESS:
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        try:
+            if not db.query(AdminUser).first():
+                db.add(AdminUser(email=settings.admin_email.lower(), hashed_password=hash_password(settings.admin_password)))
+                db.commit()
+            seed_if_empty(db)
+        finally:
+            db.close()
     yield
 
 
@@ -43,8 +49,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
+# Local dev only — Vercel serves media from Supabase, and its docs advise against app.mount
+if not SERVERLESS:
+    try:
+        UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+        app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
+    except OSError:
+        pass
 
 app.include_router(auth.router)
 app.include_router(projects.router)
