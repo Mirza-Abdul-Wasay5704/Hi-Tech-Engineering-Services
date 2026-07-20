@@ -33,7 +33,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ============ G — LOBBY (scroll-driven hero) ============ */}
+      {/* ============ G — LOBBY (hero) ============ */}
       <HomeHero settings={settings} />
 
       {/* ============ signage marquee ============ */}

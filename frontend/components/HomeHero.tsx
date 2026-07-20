@@ -4,60 +4,45 @@ import Link from "next/link";
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { Counter } from "./motion";
-import ElevatorViewport from "./three/ElevatorViewport";
+import ElevatorStage from "./three/ElevatorStage";
 import type { SiteSettings } from "@/lib/types";
 
 export default function HomeHero({ settings }: { settings: SiteSettings }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
-  const p = useSpring(scrollYProgress, { stiffness: 80, damping: 24, restDelta: 0.001 });
+  const p = useSpring(scrollYProgress, { stiffness: 80, damping: 26, restDelta: 0.001 });
   const words = settings.hero_title.split(" ");
 
+  const fade = (delay: number) => ({
+    initial: reduce ? false : { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, delay, ease: [0.22, 0.7, 0.3, 1] as const },
+  });
+
   return (
-    // tall scroll track on desktop drives the ascent; normal flow on mobile
-    <div ref={ref} className={reduce ? "" : "lg:h-[220vh]"}>
-      <section className="relative pt-24 md:pt-28 lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:overflow-hidden lg:pt-0">
-        <div className="pointer-events-none absolute -right-32 -top-24 h-[520px] w-[520px] rounded-full bg-[var(--green)] opacity-[0.06] blur-[120px]" aria-hidden />
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-5 pb-12 lg:grid-cols-[1.02fr_0.98fr] lg:gap-10 lg:pb-0">
-          {/* ---- copy ---- */}
+    // tall scroll track drives the ascent on desktop; normal flow on mobile
+    <div ref={ref} className={reduce ? "" : "lg:h-[265vh]"}>
+      {/* sticks BELOW the navbar (top-16) so it never overlaps the menu */}
+      <section className="relative pt-24 md:pt-28 lg:sticky lg:top-16 lg:flex lg:h-[calc(100vh-4rem)] lg:items-center lg:overflow-hidden lg:pt-0">
+        <div className="pointer-events-none absolute -right-40 top-0 h-[520px] w-[520px] rounded-full bg-[var(--green)] opacity-[0.05] blur-[120px]" aria-hidden />
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-5 pb-16 lg:grid-cols-[1.04fr_0.96fr] lg:gap-16 lg:pb-0">
+          {/* ---------------- copy ---------------- */}
           <div className="order-2 lg:order-1">
-            <div className="landing max-w-xl">
+            <motion.div {...fade(0)} className="landing max-w-xl">
               <span className="floor-plate">G</span>
               <span className="landing-label">Est. {settings.founded} — Karachi, Pakistan</span>
-            </div>
+            </motion.div>
 
-            <h1 className="display mt-6 text-5xl sm:text-6xl md:text-7xl">
-              {words.map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden pb-1 align-top">
-                  <motion.span
-                    className={`inline-block ${i >= words.length - 1 ? "text-[var(--green)]" : ""}`}
-                    initial={reduce ? false : { y: "110%" }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 0.65, delay: 0.1 + i * 0.08, ease: [0.22, 0.7, 0.3, 1] }}
-                  >
-                    {word}
-                  </motion.span>
-                  {i < words.length - 1 && <span>&nbsp;</span>}
-                </span>
-              ))}
-            </h1>
+            <motion.h1 {...fade(0.08)} className="display mt-6 text-5xl leading-[0.92] text-[var(--ink)] sm:text-6xl md:text-7xl">
+              {words.slice(0, -1).join(" ")} <span className="text-[var(--green)]">{words.slice(-1)}</span>
+            </motion.h1>
 
-            <motion.p
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.45 }}
-              className="mt-5 max-w-xl text-[15px] leading-relaxed text-[var(--muted)] md:text-base"
-            >
+            <motion.p {...fade(0.16)} className="mt-6 max-w-xl text-[15px] leading-relaxed text-[var(--muted)] md:text-base">
               {settings.hero_subtitle}
             </motion.p>
 
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.55 }}
-              className="mt-7 flex flex-wrap gap-3 sm:gap-4"
-            >
+            <motion.div {...fade(0.24)} className="mt-8 flex flex-wrap gap-3 sm:gap-4">
               <Link href="/contact" className="btn-primary">
                 Request a Quote <span aria-hidden>→</span>
               </Link>
@@ -67,25 +52,30 @@ export default function HomeHero({ settings }: { settings: SiteSettings }) {
             </motion.div>
 
             <motion.div
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.65 }}
-              className="plate-static mt-10 grid max-w-lg grid-cols-2 divide-y divide-[var(--line)] sm:grid-cols-4 sm:divide-x sm:divide-y-0"
+              {...fade(0.32)}
+              className="mt-10 grid max-w-xl grid-cols-2 overflow-hidden rounded-[4px] border border-[var(--line)] bg-[var(--panel)] sm:grid-cols-4"
             >
-              {settings.stats.map((s) => (
-                <div key={s.label} className="px-4 py-4">
-                  <div className="display text-2xl text-[var(--green)] sm:text-3xl">
+              {settings.stats.map((s, i) => (
+                <div
+                  key={s.label}
+                  className={`px-4 py-4 ${i % 2 === 1 ? "border-l border-[var(--line)]" : ""} ${
+                    i >= 2 ? "border-t border-[var(--line)] sm:border-t-0" : ""
+                  } sm:border-l`}
+                >
+                  <div className="display text-2xl text-[var(--green)] sm:text-[1.7rem]">
                     <Counter value={s.value} suffix={s.suffix} />
                   </div>
-                  <div className="mt-1 font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">{s.label}</div>
+                  <div className="mt-1 font-mono text-[10px] uppercase leading-tight tracking-wider text-[var(--muted)]">
+                    {s.label}
+                  </div>
                 </div>
               ))}
             </motion.div>
           </div>
 
-          {/* ---- 3D elevator viewport ---- */}
-          <div className="order-1 mx-auto w-full max-w-[300px] sm:max-w-[360px] lg:order-2 lg:max-w-[440px]">
-            <ElevatorViewport p={p} />
+          {/* ---------------- 3D elevator stage ---------------- */}
+          <div className="order-1 mx-auto w-full max-w-[300px] sm:max-w-[360px] lg:order-2 lg:max-w-[420px]">
+            <ElevatorStage p={p} />
           </div>
         </div>
       </section>

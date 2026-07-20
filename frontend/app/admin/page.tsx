@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api, getToken, login, setToken } from "@/lib/adminApi";
+import { API_URL } from "@/lib/site";
 import { LogoMark } from "@/components/Navbar";
 import ProjectsPanel from "@/components/admin/ProjectsPanel";
 import BlogPanel from "@/components/admin/BlogPanel";
@@ -14,6 +15,13 @@ type Tab = (typeof TABS)[number];
 export default function AdminPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [tab, setTab] = useState<Tab>("Projects");
+
+  // Pre-warm the serverless API (and its DB connection) the moment the admin
+  // opens, so it's hot by the time data actually loads.
+  useEffect(() => {
+    fetch(`${API_URL}/health`).catch(() => {});
+    fetch(`${API_URL}/api/settings`).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!getToken()) {
