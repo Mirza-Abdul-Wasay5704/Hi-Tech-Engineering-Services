@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { COMPANY } from "@/lib/site";
-import { LogoMark } from "./Navbar";
 
 export default function Footer() {
   return (
@@ -9,7 +8,14 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">
-              <LogoMark variant="dark" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo.png"
+                alt="Hi-Tech Engineering Services logo"
+                className="h-11 w-auto rounded-[4px] bg-[var(--paper)] p-1"
+                width={48}
+                height={44}
+              />
               <span className="display text-xl tracking-wide">
                 HI-TECH <span className="text-[var(--brass)]">ENGINEERING</span> SERVICES
               </span>

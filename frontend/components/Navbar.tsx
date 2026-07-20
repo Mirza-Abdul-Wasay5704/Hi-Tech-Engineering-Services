@@ -37,7 +37,8 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Hi-Tech Engineering Services — home">
-          <LogoMark />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Hi-Tech Engineering Services logo" className="h-10 w-auto" width={44} height={40} />
           <span className="leading-tight">
             <span className="display block text-[16px] tracking-wide">
               HI-TECH <span className="text-[var(--green)]">ENGINEERING</span>
