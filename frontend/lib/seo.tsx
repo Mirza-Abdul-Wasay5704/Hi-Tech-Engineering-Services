@@ -1,24 +1,35 @@
 import { COMPANY, SITE_URL } from "./site";
-import type { FaqItem, Service, BlogPost } from "./types";
+import type { FaqItem, Service, BlogPost, SiteSettings } from "./types";
 
-export function localBusinessJsonLd() {
+/** Convert a local Pakistani number (0331-…) to intl (+92331-…) for schema. */
+function toIntl(phone: string): string {
+  const digits = phone.replace(/[^\d]/g, "");
+  return digits.startsWith("0") ? `+92-${digits.slice(1)}` : phone;
+}
+
+export function localBusinessJsonLd(settings?: SiteSettings) {
+  const name = settings?.company_name || COMPANY.name;
+  const tagline = settings?.tagline || COMPANY.tagline;
+  const phone = settings?.phones?.[0] ? toIntl(settings.phones[0]) : COMPANY.phoneIntl;
+  const email = settings?.email || COMPANY.email;
+  const founded = settings?.founded || COMPANY.founded;
   return {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ProfessionalService"],
     "@id": `${SITE_URL}/#business`,
-    name: COMPANY.name,
-    description: COMPANY.tagline,
+    name,
+    description: tagline,
     url: SITE_URL,
-    logo: `${SITE_URL}/icon.svg`,
+    logo: `${SITE_URL}/icon.png`,
     image: `${SITE_URL}/opengraph-image`,
-    telephone: COMPANY.phoneIntl,
-    email: COMPANY.email,
-    foundingDate: COMPANY.founded,
+    telephone: phone,
+    email,
+    foundingDate: founded,
     priceRange: "$$",
     address: {
       "@type": "PostalAddress",
-      streetAddress: COMPANY.address.street,
-      addressLocality: COMPANY.address.city,
+      streetAddress: settings?.address || COMPANY.address.street,
+      addressLocality: settings?.city || COMPANY.address.city,
       addressRegion: COMPANY.address.region,
       addressCountry: COMPANY.address.country,
     },

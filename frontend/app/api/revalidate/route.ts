@@ -19,8 +19,11 @@ export async function POST(req: NextRequest) {
   for (const path of paths) {
     revalidatePath(path === "/sitemap.xml" ? "/sitemap.xml" : path);
   }
-  // llms.txt reflects services/projects too
+  // llms.txt reflects services/projects/settings
   revalidatePath("/llms.txt");
+  // settings (phones/email/address/etc.) live in the shared layout footer + JSON-LD —
+  // cascade a layout revalidation so every page picks up the change, not just the listed paths
+  revalidatePath("/", "layout");
 
-  return NextResponse.json({ revalidated: paths });
+  return NextResponse.json({ revalidated: paths, layout: true });
 }

@@ -1,22 +1,24 @@
-import { getProjects, getServices } from "@/lib/api";
+import { getProjects, getServices, getSettings } from "@/lib/api";
 import { COMPANY, SITE_URL } from "@/lib/site";
 
 export const revalidate = 3600;
 
 // llms.txt — a concise, factual company summary for AI crawlers and assistants.
 export async function GET() {
-  const [services, projects] = await Promise.all([getServices(), getProjects()]);
+  const [services, projects, settings] = await Promise.all([getServices(), getProjects(), getSettings()]);
+  const name = settings.company_name || COMPANY.name;
+  const founded = settings.founded || COMPANY.founded;
 
-  const body = `# ${COMPANY.name}
+  const body = `# ${name}
 
-> Elevator maintenance, mechanical & electrical overhauling, retrofitting and modernization company in Karachi, Pakistan. Operating since ${COMPANY.founded} (26+ years). Specialists in Sigma/LG elevator control systems. One of the fastest breakdown response times in Karachi.
+> Elevator maintenance, mechanical & electrical overhauling, retrofitting and modernization company in Karachi, Pakistan. Operating since ${founded} (26+ years). Specialists in Sigma/LG elevator control systems. One of the fastest breakdown response times in Karachi.
 
 ## Key facts
-- Location: ${COMPANY.address.street}, ${COMPANY.address.city}, Pakistan
-- Phone: ${COMPANY.phones.join(" / ")}
-- Email: ${COMPANY.email}
+- Location: ${settings.address || `${COMPANY.address.street}, ${COMPANY.address.city}, Pakistan`}
+- Phone: ${settings.phones.filter(Boolean).join(" / ")}
+- Email: ${settings.email}
 - Service area: Karachi and across Pakistan
-- Founded: ${COMPANY.founded}
+- Founded: ${founded}
 - Credentials: NTN-registered; manufacturer training in Korea (1994, 1997, 2005, 2014)
 
 ## Services
