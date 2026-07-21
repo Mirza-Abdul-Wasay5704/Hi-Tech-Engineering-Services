@@ -127,13 +127,13 @@ class BlogOut(BlogBase, ORMModel):
 
 # ---- Leads ----
 class LeadCreate(BaseModel):
-    name: str
-    company: str = ""
+    name: str = Field(min_length=1, max_length=120)
+    company: str = Field("", max_length=160)
     email: EmailStr
-    phone: str = ""
-    service: str = ""
-    message: str = ""
-    website: str = ""  # honeypot — must stay empty
+    phone: str = Field("", max_length=40)
+    service: str = Field("", max_length=120)
+    message: str = Field("", max_length=4000)
+    website: str = Field("", max_length=200)  # honeypot — must stay empty
 
 
 class LeadUpdate(BaseModel):

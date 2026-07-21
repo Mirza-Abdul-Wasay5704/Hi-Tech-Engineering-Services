@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { ContactShadows, Environment, Lightformer, MeshReflectorMaterial, RoundedBox, useTexture } from "@react-three/drei";
+import { ContactShadows, Environment, Lightformer, RoundedBox, useTexture } from "@react-three/drei";
 import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { MotionValue } from "framer-motion";
@@ -110,7 +110,7 @@ function Elevator({ p }: { p: MotionValue<number> }) {
 
   return (
     <group>
-      <Environment resolution={256}>
+      <Environment resolution={128} frames={1}>
         <Lightformer intensity={2.2} position={[0, 4, 2]} scale={[8, 4, 1]} color="#ffffff" />
         <Lightformer intensity={1.1} position={[-4, 1, 3]} scale={[3, 6, 1]} color="#eef3ef" />
         <Lightformer intensity={0.9} position={[4, 0, 3]} scale={[3, 6, 1]} color="#fff4df" />
@@ -120,7 +120,8 @@ function Elevator({ p }: { p: MotionValue<number> }) {
       <ambientLight intensity={0.4} />
       <directionalLight position={[4, 7, 5]} intensity={1.05} color="#fff8ee" />
 
-      <ContactShadows position={[0, -1.35, 0]} opacity={0.38} scale={9} blur={2.8} far={4} color={GREEN_DEEP} />
+      {/* rendered once (frames=1) — a soft static ground shadow, no per-frame cost */}
+      <ContactShadows position={[0, -1.35, 0]} opacity={0.38} scale={9} blur={2.8} far={4} resolution={256} frames={1} color={GREEN_DEEP} />
 
       <group ref={follow}>
         {markers.map((my) => (
@@ -168,27 +169,29 @@ function Elevator({ p }: { p: MotionValue<number> }) {
           </mesh>
         ))}
 
-        {/* scenic glass side walls */}
+        {/* scenic glass side walls — cheap glassy look (reflection + transparency,
+            no per-frame refraction pass) so it stays fast on phones */}
         {[-0.79, 0.79].map((x) => (
           <mesh key={x} position={[x, 0, 0]}>
             <boxGeometry args={[0.03, 2.0, 1.5]} />
-            <meshPhysicalMaterial transmission={1} thickness={0.5} roughness={0.05} ior={1.45} color="#eaf1ec" transparent metalness={0} />
+            <meshPhysicalMaterial
+              transparent
+              opacity={0.24}
+              roughness={0.04}
+              metalness={0}
+              clearcoat={1}
+              clearcoatRoughness={0.06}
+              ior={1.4}
+              color="#dfeae4"
+              envMapIntensity={1.3}
+            />
           </mesh>
         ))}
 
-        {/* mirror back wall + logo */}
+        {/* polished back wall (env-reflected, cheap) + logo */}
         <mesh position={[0, 0.05, -0.75]}>
           <planeGeometry args={[1.42, 1.9]} />
-          <MeshReflectorMaterial
-            resolution={256}
-            mixBlur={1.2}
-            mixStrength={1.4}
-            blur={[280, 120]}
-            roughness={0.4}
-            depthScale={0}
-            color="#bcc4be"
-            metalness={0.75}
-          />
+          <meshStandardMaterial color="#c2cac4" metalness={1} roughness={0.14} envMapIntensity={1.4} />
         </mesh>
         <mesh position={[0, 0.32, -0.72]}>
           <planeGeometry args={[0.72 * logoAspect, 0.72]} />
@@ -310,11 +313,13 @@ function Elevator({ p }: { p: MotionValue<number> }) {
 }
 
 export default function Elevator3D({ p }: { p: MotionValue<number> }) {
+  const coarse = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
   return (
     <Canvas
-      dpr={[1, 1.8]}
+      dpr={coarse ? [1, 1.15] : [1, 1.5]}
       camera={{ position: [3.4, 1.3, 5.6], fov: 34 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      performance={{ min: 0.5 }}
       style={{ background: "transparent" }}
       aria-hidden
     >

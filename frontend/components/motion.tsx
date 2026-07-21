@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { animate, motion, useInView, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 /** Slide-up reveal on scroll. */
 export function Reveal({
@@ -69,11 +69,14 @@ export function RevealItem({
   );
 }
 
-/** Animated count-up number, triggers when scrolled into view. */
+/**
+ * Count-up number. Writes straight to the DOM (imperative) so it never triggers
+ * a React re-render per frame — smooth even while the 3D hero is initializing.
+ */
 export function Counter({
   value,
   suffix = "",
-  duration = 1.6,
+  duration = 2,
 }: {
   value: number;
   suffix?: string;
@@ -82,29 +85,34 @@ export function Counter({
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
   const reduce = useReducedMotion();
-  const [display, setDisplay] = useState(reduce ? value : 0);
 
   useEffect(() => {
-    if (!inView || reduce) {
-      if (reduce) setDisplay(value);
+    const node = ref.current;
+    if (!node) return;
+    if (reduce) {
+      node.textContent = `${value}${suffix}`;
       return;
     }
-    let frame: number;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - start) / (duration * 1000), 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setDisplay(Math.round(eased * value));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [inView, value, duration, reduce]);
+    if (!inView) return;
+    let last = -1;
+    const controls = animate(0, value, {
+      duration,
+      delay: 0.35, // let first paint + the 3D mount settle before counting
+      ease: [0.16, 1, 0.3, 1], // easeOutExpo — smooth glide into the final number
+      onUpdate(v) {
+        const r = Math.round(v);
+        if (r !== last) {
+          last = r;
+          node.textContent = `${r}${suffix}`;
+        }
+      },
+    });
+    return () => controls.stop();
+  }, [inView, value, suffix, duration, reduce]);
 
   return (
-    <span ref={ref}>
-      {display}
-      {suffix}
+    <span ref={ref} className="tabular-nums">
+      {`0${suffix}`}
     </span>
   );
 }

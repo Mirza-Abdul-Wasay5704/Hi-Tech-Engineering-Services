@@ -7,28 +7,35 @@ import type { MotionValue } from "framer-motion";
 const Elevator3D = dynamic(() => import("./Elevator3D"), { ssr: false });
 
 /**
- * A bright, contained "presentation stage" that holds the studio-lit 3D
- * elevator. Rounded + overflow-hidden so it can never overlap other content.
- * Light and airy to read as premium/professional, not a game.
+ * Holds the studio-lit 3D elevator. The 3D renders on every device for a
+ * consistent experience; while its WebGL chunk loads we show only a neutral
+ * spinner (never a stand-in 2D elevator). Reduced-motion users get a static
+ * poster instead of animation.
  */
 export default function ElevatorStage({ p }: { p: MotionValue<number> }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [reduced, setReduced] = useState(false);
   const [mount, setMount] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const capable =
-      typeof navigator === "undefined" || !("hardwareConcurrency" in navigator) || navigator.hardwareConcurrency > 4;
-    const bigEnough = window.innerWidth >= 768;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!capable || !bigEnough || reduced) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setReduced(true);
+      return;
+    }
     const el = ref.current;
     if (!el) return;
+    type IdleWindow = Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void };
+    const idle = (cb: () => void) => {
+      const w = window as IdleWindow;
+      if (w.requestIdleCallback) w.requestIdleCallback(cb, { timeout: 1200 });
+      else setTimeout(cb, 200);
+    };
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) {
-          setMount(true);
           io.disconnect();
+          idle(() => setMount(true));
         }
       },
       { rootMargin: "200px" },
@@ -39,22 +46,27 @@ export default function ElevatorStage({ p }: { p: MotionValue<number> }) {
 
   useEffect(() => {
     if (!mount) return;
-    const id = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(id);
+    // let the first WebGL frame paint before fading the canvas in
+    const t = setTimeout(() => setReady(true), 220);
+    return () => clearTimeout(t);
   }, [mount]);
 
   return (
-    // no card/box — the elevator floats directly on the page background
     <div ref={ref} className="relative aspect-[4/5] w-full">
-      {/* poster / fallback (also shown on phones + reduced motion) */}
-      <div className={`absolute inset-0 transition-opacity duration-700 ${ready ? "opacity-0" : "opacity-100"}`} aria-hidden>
+      {reduced ? (
         <Poster />
-      </div>
-
-      {mount && (
-        <div className={`absolute inset-0 transition-opacity duration-1000 ${ready ? "opacity-100" : "opacity-0"}`}>
-          <Elevator3D p={p} />
-        </div>
+      ) : (
+        <>
+          {/* neutral loader (no stand-in elevator) */}
+          <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${ready ? "opacity-0" : "opacity-100"}`} aria-hidden>
+            <span className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--line)] border-t-[var(--brass)]" />
+          </div>
+          {mount && (
+            <div className={`absolute inset-0 transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}>
+              <Elevator3D p={p} />
+            </div>
+          )}
+        </>
       )}
 
       <span className="pointer-events-none absolute bottom-1 left-1/2 -translate-x-1/2 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--muted)]/70">
@@ -64,6 +76,7 @@ export default function ElevatorStage({ p }: { p: MotionValue<number> }) {
   );
 }
 
+/** Static fallback shown only for prefers-reduced-motion. */
 function Poster() {
   return (
     <div className="flex h-full w-full items-center justify-center">

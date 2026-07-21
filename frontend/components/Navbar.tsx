@@ -16,7 +16,11 @@ const LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState<number | null>(null);
   const pathname = usePathname();
+
+  const activeIndex = LINKS.findIndex((l) => (l.href === "/" ? pathname === "/" : pathname.startsWith(l.href)));
+  const current = hovered ?? (activeIndex === -1 ? null : activeIndex);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -49,24 +53,35 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-7 md:flex">
-          {LINKS.map((l) => {
-            const active = l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
+        <div className="hidden items-center gap-1 md:flex" onMouseLeave={() => setHovered(null)}>
+          {LINKS.map((l, i) => {
+            const active = activeIndex === i;
             return (
               <Link
                 key={l.href}
                 href={l.href}
-                className={`text-sm transition-colors ${
-                  active
-                    ? "font-semibold text-[var(--green)] underline decoration-[var(--brass)] decoration-2 underline-offset-8"
-                    : "text-[var(--muted)] hover:text-[var(--ink)]"
-                }`}
+                onMouseEnter={() => setHovered(i)}
+                className="group relative px-3.5 py-2"
               >
-                {l.label}
+                <span
+                  className={`relative z-10 text-sm transition-colors duration-200 ${
+                    active ? "font-semibold text-[var(--green)]" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
+                  }`}
+                >
+                  {l.label}
+                </span>
+                {/* brass indicator glides smoothly between tabs on hover/active */}
+                {current === i && (
+                  <motion.span
+                    layoutId="nav-underline"
+                    className="absolute inset-x-2.5 bottom-1 z-0 h-[2px] rounded-full bg-[var(--brass)]"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
               </Link>
             );
           })}
-          <Link href="/contact" className="btn-primary !px-4 !py-2 text-sm">
+          <Link href="/contact" className="btn-primary !ml-3 !px-4 !py-2 text-sm">
             Request a Quote
           </Link>
         </div>
@@ -89,23 +104,47 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t border-[var(--line)] md:hidden"
+            transition={{ duration: 0.3, ease: [0.22, 0.7, 0.3, 1] }}
+            className="overflow-hidden border-t border-[var(--line)] bg-[rgba(239,241,238,0.97)] md:hidden"
           >
-            <div className="flex flex-col gap-1 px-5 py-4">
-              {LINKS.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="rounded px-2 py-2.5 text-[15px] text-[var(--ink)] hover:bg-[var(--green-wash)]"
-                >
-                  {l.label}
+            <motion.div
+              className="px-4 py-3"
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={{ open: { transition: { staggerChildren: 0.045, delayChildren: 0.03 } }, closed: {} }}
+            >
+              {LINKS.map((l, i) => {
+                const active = activeIndex === i;
+                return (
+                  <motion.div
+                    key={l.href}
+                    variants={{
+                      closed: { opacity: 0, x: -12 },
+                      open: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 460, damping: 34 } },
+                    }}
+                  >
+                    <Link
+                      href={l.href}
+                      className={`relative flex items-center rounded-[3px] py-3 pl-4 pr-2 text-[15px] transition-colors ${
+                        active ? "font-semibold text-[var(--green)]" : "text-[var(--ink)] hover:bg-[var(--green-wash)]"
+                      }`}
+                    >
+                      {active && (
+                        <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-[var(--brass)]" />
+                      )}
+                      {l.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
+
+              <motion.div variants={{ closed: { opacity: 0, y: 6 }, open: { opacity: 1, y: 0, transition: { duration: 0.3 } } }}>
+                <Link href="/contact" className="btn-primary mt-2 w-full justify-center">
+                  Request a Quote →
                 </Link>
-              ))}
-              <Link href="/contact" className="btn-primary mt-2 justify-center">
-                Request a Quote
-              </Link>
-            </div>
+              </motion.div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
