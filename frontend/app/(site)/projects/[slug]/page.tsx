@@ -53,11 +53,21 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <Reveal delay={0.1}>
           <div>
             {project.image_url && (
-              <img
-                src={mediaUrl(project.image_url)}
-                alt={`${project.name} building`}
-                className="mb-8 w-full rounded-[3px] border border-[var(--line)] object-cover"
-              />
+              <div className="relative mb-8 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[4px] border border-[var(--line)] bg-[var(--green-wash)]">
+                {/* blurred fill keeps the full photo visible without cropping */}
+                <img
+                  src={mediaUrl(project.image_url)}
+                  alt=""
+                  aria-hidden
+                  className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-125"
+                />
+                <span className="absolute inset-0 bg-[var(--green-deep)]/20" aria-hidden />
+                <img
+                  src={mediaUrl(project.image_url)}
+                  alt={`${project.name} building`}
+                  className="relative h-full w-full object-contain"
+                />
+              </div>
             )}
             <h2 className="display text-3xl">Scope of Work</h2>
             <p className="mt-3 max-w-2xl leading-relaxed text-[var(--muted)]">

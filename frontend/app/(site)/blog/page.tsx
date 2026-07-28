@@ -33,12 +33,21 @@ export default async function BlogPage() {
             <RevealItem key={post.id}>
               <Link href={`/blog/${post.slug}`} className="plate group flex h-full flex-col overflow-hidden">
                 {post.cover_url && (
-                  <img
-                    src={mediaUrl(post.cover_url)}
-                    alt={post.title}
-                    className="h-44 w-full border-b border-[var(--line)] object-cover"
-                    loading="lazy"
-                  />
+                  <div className="relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b border-[var(--line)] bg-[var(--green-wash)]">
+                    <img
+                      src={mediaUrl(post.cover_url)}
+                      alt=""
+                      aria-hidden
+                      className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-125"
+                      loading="lazy"
+                    />
+                    <img
+                      src={mediaUrl(post.cover_url)}
+                      alt={post.title}
+                      className="relative h-full w-full object-contain"
+                      loading="lazy"
+                    />
+                  </div>
                 )}
                 <div className="flex flex-1 flex-col p-6">
                   <time className="font-mono text-xs tracking-wider text-[var(--muted)]">

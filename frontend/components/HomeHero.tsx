@@ -56,7 +56,7 @@ export default function HomeHero({ settings }: { settings: SiteSettings }) {
 
             <motion.div
               {...fade(0.32)}
-              className="mt-8 grid max-w-xl grid-cols-2 overflow-hidden rounded-[4px] border border-[var(--line)] bg-[var(--panel)] sm:grid-cols-4"
+              className="glass mt-8 grid max-w-xl grid-cols-2 overflow-hidden rounded-[6px] sm:grid-cols-4"
             >
               {settings.stats.map((s, i) => (
                 <div

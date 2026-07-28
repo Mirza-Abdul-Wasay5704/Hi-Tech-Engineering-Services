@@ -6,17 +6,29 @@ import type { Project } from "@/lib/types";
 export default function ProjectCard({ project }: { project: Project }) {
   return (
     <Link href={`/projects/${project.slug}`} className="plate group block overflow-hidden">
-      <div className="relative flex h-40 items-center justify-center overflow-hidden border-b border-[var(--line)] bg-[var(--green-wash)]">
+      {/* square frame suits the mix of portrait + landscape building photos:
+          nothing is cropped (object-contain) and portraits still display large */}
+      <div className="relative flex aspect-square items-center justify-center overflow-hidden border-b border-[var(--line)] bg-[var(--green-wash)]">
         {project.image_url ? (
           <>
+            {/* blurred fill so tall/wide photos are never cropped — the real
+                photo sits on top, fully visible (object-contain) */}
+            <img
+              src={mediaUrl(project.image_url)}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-125"
+              loading="lazy"
+            />
+            <span className="absolute inset-0 bg-[var(--green-deep)]/25" aria-hidden />
             <img
               src={mediaUrl(project.image_url)}
               alt={`${project.name} — elevator services project`}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="relative h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.04]"
               loading="lazy"
             />
             {project.logo_url && (
-              <span className="absolute bottom-2 right-2 flex h-11 w-20 items-center justify-center rounded-[2px] border border-[var(--line)] bg-white/95 px-2 shadow-sm">
+              <span className="glass-tile absolute bottom-2 right-2 flex h-11 w-20 items-center justify-center rounded-[3px] px-2">
                 <img
                   src={mediaUrl(project.logo_url)}
                   alt={`${project.client_name || project.name} logo`}
@@ -38,7 +50,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         ) : (
           <BuildingGlyph />
         )}
-        <span className="absolute left-3 top-3 rounded-[2px] border border-[var(--brass)] bg-[var(--panel)] px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-[var(--brass)]">
+        <span className="glass-chip absolute left-3 top-3 rounded-full px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-[var(--brass)]">
           {project.category}
         </span>
       </div>

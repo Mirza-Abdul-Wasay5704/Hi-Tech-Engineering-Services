@@ -35,7 +35,7 @@ export default function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled || open
-          ? "border-b-2 border-[var(--line-strong)] bg-[rgba(239,241,238,0.92)] backdrop-blur-md"
+          ? "border-b border-[color-mix(in_srgb,var(--line)_80%,transparent)] bg-[color-mix(in_srgb,var(--paper)_72%,transparent)] shadow-[0_6px_28px_-20px_rgba(18,59,45,0.5)] backdrop-blur-xl backdrop-saturate-150"
           : "bg-transparent"
       }`}
     >
