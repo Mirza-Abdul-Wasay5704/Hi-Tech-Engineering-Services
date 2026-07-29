@@ -6,7 +6,7 @@ import ProjectCard from "@/components/ProjectCard";
 import SectionHeading from "@/components/SectionHeading";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion";
 import { ServiceIcon } from "@/components/icons";
-import { getProjects, getServices, getSettings, getTestimonials } from "@/lib/api";
+import { getProjects, getServices, getSettings, getTestimonials, mediaUrl } from "@/lib/api";
 
 const PROCESS = [
   { step: "01", title: "Inspect", text: "A thorough mechanical and electrical survey of your elevators — condition, safety and wear." },
@@ -47,18 +47,37 @@ export default async function HomePage() {
           title="Complete Elevator Engineering"
           subtitle="From monthly maintenance contracts to full modernization — one team, every discipline, all brands."
         />
-        <RevealGroup className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="mt-12 grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s) => (
-            <RevealItem key={s.id}>
-              <Link href={`/services/${s.slug}`} className="plate group flex h-full flex-col p-6">
-                <span className="flex h-12 w-12 items-center justify-center rounded-[2px] bg-[var(--green-wash)] text-[var(--green)]">
-                  <ServiceIcon icon={s.icon} />
-                </span>
-                <h3 className="mt-5 font-sans text-[17px] font-semibold leading-snug transition-colors group-hover:text-[var(--green)]">
-                  {s.name}
-                </h3>
-                <p className="mt-2.5 flex-1 text-sm leading-relaxed text-[var(--muted)]">{s.summary}</p>
-                <span className="mt-4 font-mono text-xs tracking-widest text-[var(--green)]">LEARN MORE →</span>
+            <RevealItem key={s.id} className="h-full">
+              <Link href={`/services/${s.slug}`} className="plate group flex h-full flex-col overflow-hidden">
+                {s.image_url && (
+                  <div className="relative h-36 shrink-0 overflow-hidden border-b border-[var(--line)]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={mediaUrl(s.image_url)}
+                      alt={s.name}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <span className="absolute inset-0 bg-gradient-to-t from-[var(--green-deep)]/55 to-transparent" aria-hidden />
+                    <span className="glass-tile absolute bottom-2 left-2 flex h-9 w-9 items-center justify-center rounded-[3px] text-[var(--green)]">
+                      <ServiceIcon icon={s.icon} className="h-5 w-5" />
+                    </span>
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col p-6">
+                  {!s.image_url && (
+                    <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-[2px] bg-[var(--green-wash)] text-[var(--green)]">
+                      <ServiceIcon icon={s.icon} />
+                    </span>
+                  )}
+                  <h3 className="font-sans text-[17px] font-semibold leading-snug transition-colors group-hover:text-[var(--green)]">
+                    {s.name}
+                  </h3>
+                  <p className="mt-2.5 flex-1 text-sm leading-relaxed text-[var(--muted)]">{s.summary}</p>
+                  <span className="mt-4 font-mono text-xs tracking-widest text-[var(--green)]">LEARN MORE →</span>
+                </div>
               </Link>
             </RevealItem>
           ))}
@@ -89,9 +108,9 @@ export default async function HomePage() {
               <Link href="/projects" className="btn-ghost">All Projects →</Link>
             </Reveal>
           </div>
-          <RevealGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup className="mt-12 grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((p) => (
-              <RevealItem key={p.id}>
+              <RevealItem key={p.id} className="h-full">
                 <ProjectCard project={p} />
               </RevealItem>
             ))}

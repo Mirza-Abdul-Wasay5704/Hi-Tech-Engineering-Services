@@ -27,14 +27,13 @@ export default function ScrollMarquee() {
   const { scrollY } = useScroll();
   const velocity = useVelocity(scrollY);
   const smoothV = useSpring(velocity, { damping: 50, stiffness: 380 });
-  const boost = useTransform(smoothV, [-1200, 0, 1200], [-4, 0, 4], { clamp: false });
-  const skew = useTransform(smoothV, [-1200, 1200], [3, -3], { clamp: true });
+  const boost = useTransform(smoothV, [-1200, 0, 1200], [-1.6, 0, 1.6], { clamp: false });
   const x = useTransform(baseX, (v) => `${v}%`);
   const dir = useRef(1);
 
   useAnimationFrame((_, delta) => {
     if (reduce) return;
-    let move = dir.current * -1.6 * (delta / 1000); // base drift %/s
+    let move = dir.current * -0.9 * (delta / 1000); // base drift %/s
     const b = boost.get();
     if (b < 0) dir.current = -1;
     else if (b > 0) dir.current = 1;
@@ -45,16 +44,11 @@ export default function ScrollMarquee() {
   const row = (
     <>
       {ITEMS.map((item) => (
-        <span key={item} className="mx-6 inline-flex items-center gap-12 whitespace-nowrap">
-          <span
-            className="display text-6xl md:text-7xl"
-            style={{ WebkitTextStroke: "1.5px var(--ink)", color: "transparent" }}
-          >
+        <span key={item} className="inline-flex items-center whitespace-nowrap">
+          <span className="px-7 font-mono text-[12px] uppercase tracking-[0.34em] text-[var(--muted)] md:text-[13px]">
             {item}
           </span>
-          <span className="text-2xl text-[var(--brass)]" aria-hidden>
-            ⬡
-          </span>
+          <span className="h-1 w-1 rounded-full bg-[var(--brass)]" aria-hidden />
         </span>
       ))}
     </>
@@ -62,10 +56,10 @@ export default function ScrollMarquee() {
 
   return (
     <div
-      className="overflow-hidden border-y-2 border-[var(--line-strong)] bg-[var(--panel)] py-6"
+      className="overflow-hidden border-y border-[var(--line)] bg-[var(--panel)] py-3.5"
       aria-label="Maintenance, overhauling, modernization, spare parts, retrofitting"
     >
-      <motion.div className="flex w-max" style={reduce ? undefined : { x, skewX: skew }}>
+      <motion.div className="flex w-max" style={reduce ? undefined : { x }}>
         <span className="flex shrink-0">{row}</span>
         <span className="flex shrink-0" aria-hidden>
           {row}

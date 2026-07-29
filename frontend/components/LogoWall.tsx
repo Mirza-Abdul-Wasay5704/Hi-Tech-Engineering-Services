@@ -7,7 +7,12 @@ function LogoTile({ project }: { project: Project }) {
   const label = project.client_name || project.name;
   return (
     <RevealItem>
-      <div className="group relative flex h-28 items-center justify-center overflow-hidden rounded-[4px] border border-[var(--line)] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[var(--green)] hover:shadow-[0_6px_20px_-8px_rgba(18,59,45,0.35)]">
+      <div
+        className={`group relative flex h-28 items-center justify-center overflow-hidden rounded-[4px] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--green)] hover:shadow-[0_8px_22px_-10px_rgba(var(--shadow-color),0.45)] ${
+          // real logos need a light plate; name-only tiles follow the theme
+          project.logo_url ? "logo-plate" : "border border-[var(--line)] bg-[var(--panel)]"
+        }`}
+      >
         {/* brass corner tick — machine-plate detail */}
         <span className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l-2 border-t-2 border-[var(--brass)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <span className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b-2 border-r-2 border-[var(--brass)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

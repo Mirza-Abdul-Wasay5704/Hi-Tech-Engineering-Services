@@ -34,6 +34,7 @@ export interface Service {
   answer_block: string;
   body: string;
   icon: string;
+  image_url: string;
   scope_items: ScopeItem[];
   faq: FaqItem[];
   seo_title: string;

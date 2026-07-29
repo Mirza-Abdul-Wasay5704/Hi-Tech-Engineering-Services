@@ -126,7 +126,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
             <h2 className="display mt-6 text-4xl">Related Projects</h2>
           </Reveal>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (
               <ProjectCard key={p.id} project={p} />
             ))}

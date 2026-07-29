@@ -59,6 +59,7 @@ class ServiceBase(BaseModel):
     answer_block: str = ""
     body: str = ""
     icon: str = "wrench"
+    image_url: str = ""
     scope_items: list[Any] = Field(default_factory=list)
     faq: list[Any] = Field(default_factory=list)
     seo_title: str = ""
@@ -78,6 +79,7 @@ class ServiceUpdate(BaseModel):
     answer_block: Optional[str] = None
     body: Optional[str] = None
     icon: Optional[str] = None
+    image_url: Optional[str] = None
     scope_items: Optional[list[Any]] = None
     faq: Optional[list[Any]] = None
     seo_title: Optional[str] = None

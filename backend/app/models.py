@@ -42,6 +42,7 @@ class Service(Base):
     answer_block: Mapped[str] = mapped_column(Text, default="")  # direct-answer paragraph for SEO/LLMs
     body: Mapped[str] = mapped_column(Text, default="")  # markdown
     icon: Mapped[str] = mapped_column(String(50), default="wrench")
+    image_url: Mapped[str] = mapped_column(String(500), default="")
     scope_items: Mapped[list] = mapped_column(JSON, default=list)  # [{label, detail}]
     faq: Mapped[list] = mapped_column(JSON, default=list)  # [{q, a}]
     seo_title: Mapped[str] = mapped_column(String(200), default="")

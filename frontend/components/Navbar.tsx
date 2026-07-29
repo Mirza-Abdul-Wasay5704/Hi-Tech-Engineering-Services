@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import ThemeToggle from "./ThemeToggle";
 
 const LINKS = [
   { href: "/", label: "Home" },
@@ -33,10 +34,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
         scrolled || open
-          ? "border-b border-[color-mix(in_srgb,var(--line)_80%,transparent)] bg-[color-mix(in_srgb,var(--paper)_72%,transparent)] shadow-[0_6px_28px_-20px_rgba(18,59,45,0.5)] backdrop-blur-xl backdrop-saturate-150"
-          : "bg-transparent"
+          ? "border-[color-mix(in_srgb,var(--green)_28%,var(--line))] bg-[var(--nav-glass)] shadow-[0_10px_34px_-22px_rgba(var(--shadow-color),0.65)] backdrop-blur-xl backdrop-saturate-150"
+          : "border-transparent bg-[color-mix(in_srgb,var(--paper)_55%,transparent)] backdrop-blur-md"
       }`}
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
@@ -81,13 +82,16 @@ export default function Navbar() {
               </Link>
             );
           })}
-          <Link href="/contact" className="btn-primary !ml-3 !px-4 !py-2 text-sm">
+          <ThemeToggle className="ml-2" />
+          <Link href="/contact" className="btn-primary !ml-2 !px-4 !py-2 text-sm">
             Request a Quote
           </Link>
         </div>
 
-        <button
-          className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] md:hidden"
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <button
+          className="flex h-10 w-10 flex-col items-center justify-center gap-[5px]"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
           aria-expanded={open}
@@ -95,7 +99,8 @@ export default function Navbar() {
           <span className={`h-[2px] w-5 bg-current transition-transform ${open ? "translate-y-[7px] rotate-45" : ""}`} />
           <span className={`h-[2px] w-5 bg-current transition-opacity ${open ? "opacity-0" : ""}`} />
           <span className={`h-[2px] w-5 bg-current transition-transform ${open ? "-translate-y-[7px] -rotate-45" : ""}`} />
-        </button>
+          </button>
+        </div>
       </nav>
 
       <AnimatePresence>

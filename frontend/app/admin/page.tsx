@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api, getToken, login, setToken } from "@/lib/adminApi";
 import { API_URL } from "@/lib/site";
-import { LogoMark } from "@/components/Navbar";
+import ThemeToggle from "@/components/ThemeToggle";
 import ProjectsPanel from "@/components/admin/ProjectsPanel";
 import BlogPanel from "@/components/admin/BlogPanel";
 import LeadsPanel from "@/components/admin/LeadsPanel";
@@ -43,13 +43,15 @@ export default function AdminPage() {
     <div className="mx-auto max-w-5xl px-5 py-10">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <LogoMark size={30} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Hi-Tech Engineering Services" className="h-9 w-auto" />
           <div>
-            <h1 className="font-[family-name:var(--font-space-grotesk)] text-lg font-bold">Site Manager</h1>
+            <h1 className="font-[family-name:var(--font-big-shoulders)] text-lg font-bold uppercase tracking-wide">Site Manager</h1>
             <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)]">Hi-Tech Engineering Services</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <a href="/" target="_blank" className="text-sm text-[var(--muted)] hover:text-[var(--accent)]">View site ↗</a>
           <button
             className="text-sm text-[var(--muted)] hover:text-red-400"
@@ -109,9 +111,10 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
     <div className="flex min-h-screen items-center justify-center px-5">
       <form onSubmit={onSubmit} className="card w-full max-w-sm space-y-4 p-8">
         <div className="flex items-center gap-3">
-          <LogoMark size={30} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Hi-Tech Engineering Services" className="h-10 w-auto" />
           <div>
-            <h1 className="font-[family-name:var(--font-space-grotesk)] font-bold">Site Manager</h1>
+            <h1 className="font-[family-name:var(--font-big-shoulders)] text-lg font-bold uppercase tracking-wide">Site Manager</h1>
             <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)]">Admin login</p>
           </div>
         </div>

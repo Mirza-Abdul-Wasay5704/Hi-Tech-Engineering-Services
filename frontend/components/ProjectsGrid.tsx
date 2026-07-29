@@ -31,12 +31,13 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
         ))}
       </div>
 
-      <motion.div layout className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="mt-10 grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {filtered.map((p) => (
             <motion.div
               key={p.id}
               layout
+              className="h-full"
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}

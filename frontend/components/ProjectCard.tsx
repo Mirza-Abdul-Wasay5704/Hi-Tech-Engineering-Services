@@ -5,10 +5,10 @@ import type { Project } from "@/lib/types";
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (
-    <Link href={`/projects/${project.slug}`} className="plate group block overflow-hidden">
-      {/* square frame suits the mix of portrait + landscape building photos:
-          nothing is cropped (object-contain) and portraits still display large */}
-      <div className="relative flex aspect-square items-center justify-center overflow-hidden border-b border-[var(--line)] bg-[var(--green-wash)]">
+    <Link href={`/projects/${project.slug}`} className="plate group flex h-full flex-col overflow-hidden">
+      {/* fixed media height keeps every card identical in the grid; photos are
+          still shown in full (object-contain over a blurred fill) */}
+      <div className="relative flex h-44 shrink-0 items-center justify-center overflow-hidden border-b border-[var(--line)] bg-[var(--green-wash)]">
         {project.image_url ? (
           <>
             {/* blurred fill so tall/wide photos are never cropped — the real
@@ -54,16 +54,13 @@ export default function ProjectCard({ project }: { project: Project }) {
           {project.category}
         </span>
       </div>
-      <div className="p-5">
-        <h3 className="font-sans text-lg font-semibold transition-colors group-hover:text-[var(--green)]">
+      <div className="flex flex-1 flex-col p-4">
+        <h3 className="font-sans text-[15px] font-semibold leading-snug transition-colors group-hover:text-[var(--green)]">
           {project.name}
         </h3>
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[var(--muted)]">
+        <p className="mt-1.5 line-clamp-2 text-[13px] leading-relaxed text-[var(--muted)]">
           {project.scope_of_work || project.description}
         </p>
-        <span className="mt-3 inline-block font-mono text-xs tracking-widest text-[var(--green)] opacity-0 transition-opacity group-hover:opacity-100">
-          VIEW PROJECT →
-        </span>
       </div>
     </Link>
   );

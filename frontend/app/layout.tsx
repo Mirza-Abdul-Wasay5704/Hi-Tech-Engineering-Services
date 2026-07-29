@@ -57,7 +57,17 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${archivo.variable} ${bigShoulders.variable} ${plexMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Apply the saved/system theme before first paint — prevents a flash of
+            the wrong theme. Kept tiny and inline on purpose. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('hitech-theme');if(!t){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
