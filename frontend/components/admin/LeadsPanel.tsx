@@ -13,6 +13,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function LeadsPanel() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [error, setError] = useState("");
+  const [deleting, setDeleting] = useState<number | null>(null);
 
   const load = useCallback(() => {
     api<Lead[]>("/api/leads").then(setLeads).catch((e) => setError(e.message));
@@ -22,6 +23,20 @@ export default function LeadsPanel() {
   async function setStatus(lead: Lead, status: string) {
     await api(`/api/leads/${lead.id}`, { method: "PATCH", body: JSON.stringify({ status }) });
     load();
+  }
+
+  async function remove(lead: Lead) {
+    if (!confirm(`Delete the inquiry from "${lead.name}"? This cannot be undone.`)) return;
+    setDeleting(lead.id);
+    setError("");
+    try {
+      await api(`/api/leads/${lead.id}`, { method: "DELETE" });
+      setLeads((prev) => prev.filter((l) => l.id !== lead.id));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not delete this inquiry");
+    } finally {
+      setDeleting(null);
+    }
   }
 
   if (error) return <p className="text-sm text-red-400">{error}</p>;
@@ -60,6 +75,15 @@ export default function LeadsPanel() {
             {lead.phone && <a className="hover:text-[var(--accent)]" href={`tel:${lead.phone}`}>☎ {lead.phone}</a>}
           </div>
           {lead.message && <p className="mt-3 whitespace-pre-wrap rounded bg-[var(--surface-2)] p-3 text-sm">{lead.message}</p>}
+          <div className="mt-3 flex justify-end border-t border-[var(--line)] pt-3">
+            <button
+              onClick={() => remove(lead)}
+              disabled={deleting === lead.id}
+              className="text-xs text-red-500 transition-opacity hover:underline disabled:opacity-50"
+            >
+              {deleting === lead.id ? "Deleting…" : "Delete inquiry"}
+            </button>
+          </div>
         </div>
       ))}
     </div>

@@ -39,7 +39,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             )}
           </>
         ) : project.logo_url ? (
-          <span className="flex h-20 w-40 items-center justify-center rounded-[2px] border border-[var(--line)] bg-white px-4">
+          <span className="logo-plate flex h-20 w-40 items-center justify-center rounded-[2px] px-4">
             <img
               src={mediaUrl(project.logo_url)}
               alt={`${project.client_name || project.name} logo`}

@@ -110,7 +110,7 @@ export default function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 0.7, 0.3, 1] }}
-            className="overflow-hidden border-t border-[var(--line)] bg-[rgba(239,241,238,0.97)] md:hidden"
+            className="overflow-hidden border-t border-[var(--line)] bg-[color-mix(in_srgb,var(--paper)_97%,transparent)] md:hidden"
           >
             <motion.div
               className="px-4 py-3"
