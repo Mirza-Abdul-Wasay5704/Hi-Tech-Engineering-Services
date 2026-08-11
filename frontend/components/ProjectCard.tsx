@@ -1,7 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import Link from "next/link";
 import { mediaUrl } from "@/lib/api";
 import type { Project } from "@/lib/types";
+
+// one card is at most a third of a 1152px container
+const CARD_SIZES = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 384px";
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (
@@ -13,38 +16,44 @@ export default function ProjectCard({ project }: { project: Project }) {
           <>
             {/* blurred fill so tall/wide photos are never cropped — the real
                 photo sits on top, fully visible (object-contain) */}
-            <img
+            <Image
               src={mediaUrl(project.image_url)}
               alt=""
               aria-hidden
-              className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-125"
-              loading="lazy"
+              fill
+              sizes={CARD_SIZES}
+              className="scale-110 object-cover blur-xl saturate-125"
             />
             <span className="absolute inset-0 bg-[var(--green-deep)]/25" aria-hidden />
-            <img
+            <Image
               src={mediaUrl(project.image_url)}
               alt={`${project.name} — elevator services project`}
-              className="relative h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.04]"
-              loading="lazy"
+              fill
+              sizes={CARD_SIZES}
+              className="object-contain transition-transform duration-500 group-hover:scale-[1.04]"
             />
             {project.logo_url && (
               <span className="glass-tile absolute bottom-2 right-2 flex h-11 w-20 items-center justify-center rounded-[3px] px-2">
-                <img
+                <Image
                   src={mediaUrl(project.logo_url)}
                   alt={`${project.client_name || project.name} logo`}
-                  className="max-h-8 max-w-full object-contain"
-                  loading="lazy"
+                  width={72}
+                  height={32}
+                  sizes="80px"
+                  className="max-h-8 w-auto object-contain"
                 />
               </span>
             )}
           </>
         ) : project.logo_url ? (
           <span className="logo-plate flex h-20 w-40 items-center justify-center rounded-[2px] px-4">
-            <img
+            <Image
               src={mediaUrl(project.logo_url)}
               alt={`${project.client_name || project.name} logo`}
-              className="max-h-14 max-w-full object-contain"
-              loading="lazy"
+              width={140}
+              height={56}
+              sizes="160px"
+              className="max-h-14 w-auto object-contain"
             />
           </span>
         ) : (

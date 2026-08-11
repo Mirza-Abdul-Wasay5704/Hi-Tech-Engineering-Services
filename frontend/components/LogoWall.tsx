@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import { mediaUrl } from "@/lib/api";
 import type { Project } from "@/lib/types";
 import { RevealGroup, RevealItem } from "./motion";
@@ -17,11 +17,13 @@ function LogoTile({ project }: { project: Project }) {
         <span className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l-2 border-t-2 border-[var(--brass)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <span className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b-2 border-r-2 border-[var(--brass)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         {project.logo_url ? (
-          <img
+          <Image
             src={mediaUrl(project.logo_url)}
             alt={`${label} logo`}
-            className="max-h-16 max-w-[78%] object-contain transition-transform duration-300 group-hover:scale-[1.06]"
-            loading="lazy"
+            width={180}
+            height={64}
+            sizes="(max-width: 640px) 45vw, 200px"
+            className="max-h-16 w-auto max-w-[78%] object-contain transition-transform duration-300 group-hover:scale-[1.06]"
           />
         ) : (
           <span className="px-4 text-center font-mono text-[11px] font-semibold uppercase leading-snug tracking-[0.12em] text-[var(--ink)]">

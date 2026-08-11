@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import HomeHero from "@/components/HomeHero";
+import NextGenSection from "@/components/NextGenSection";
 import ScrollMarquee from "@/components/ScrollMarquee";
 import LogoWall from "@/components/LogoWall";
 import ProjectCard from "@/components/ProjectCard";
@@ -45,20 +47,28 @@ export default async function HomePage() {
           floor="01"
           label="What we do"
           title="Complete Elevator Engineering"
-          subtitle="From monthly maintenance contracts to full modernization — one team, every discipline, all brands."
+          subtitle="From new installations and monthly maintenance to full modernization — one team, every discipline, all brands."
         />
         <RevealGroup className="mt-12 grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s) => (
             <RevealItem key={s.id} className="h-full">
               <Link href={`/services/${s.slug}`} className="plate group flex h-full flex-col overflow-hidden">
                 {s.image_url && (
-                  <div className="relative h-36 shrink-0 overflow-hidden border-b border-[var(--line)]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                  <div className="relative flex h-36 shrink-0 items-center justify-center overflow-hidden border-b border-[var(--line)] bg-[var(--green-wash)]">
+                    <Image
+                      src={mediaUrl(s.image_url)}
+                      alt=""
+                      aria-hidden
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 288px"
+                      className="scale-110 object-cover blur-xl saturate-125"
+                    />
+                    <Image
                       src={mediaUrl(s.image_url)}
                       alt={s.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 288px"
+                      className="object-contain transition-transform duration-500 group-hover:scale-[1.04]"
                     />
                     <span className="absolute inset-0 bg-gradient-to-t from-[var(--green-deep)]/55 to-transparent" aria-hidden />
                     <span className="glass-tile absolute bottom-2 left-2 flex h-9 w-9 items-center justify-center rounded-[3px] text-[var(--green)]">
@@ -83,6 +93,9 @@ export default async function HomePage() {
           ))}
         </RevealGroup>
       </section>
+
+      {/* ============ NG — NEXT-GENERATION SYSTEMS + SIGMA ============ */}
+      <NextGenSection />
 
       {/* ============ 02 — CLIENTS ============ */}
       <section className="py-8">

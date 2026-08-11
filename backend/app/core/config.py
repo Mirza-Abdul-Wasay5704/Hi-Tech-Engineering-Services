@@ -8,7 +8,9 @@ class Settings(BaseSettings):
     # Auth
     jwt_secret: str = "change-me-in-production"
     jwt_algorithm: str = "HS256"
-    access_token_expire_minutes: int = 60 * 12
+    # stay signed in for 30 days — this is a single-admin content panel, so a
+    # long session is far more useful than frequent re-logins
+    access_token_expire_minutes: int = 60 * 24 * 30
 
     # Initial admin (created on first startup if no admin exists)
     admin_email: str = "admin@hitechengineering.com"
@@ -29,6 +31,8 @@ class Settings(BaseSettings):
     # Resend email (optional — lead emails skipped when unset)
     resend_api_key: str = ""
     lead_notify_email: str = "hi.techengineering1971@gmail.com"
+    # ONLY this address may reset the admin password
+    reset_allowed_email: str = "hi.techengineeringmirza@gmail.com"
     # Resend's shared sender works with no domain verification. Once you verify
     # your own domain in Resend, override this env var with e.g. leads@yourdomain.com.
     lead_from_email: str = "onboarding@resend.dev"

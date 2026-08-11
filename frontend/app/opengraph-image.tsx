@@ -76,10 +76,10 @@ export default function OgImage() {
           >
             G
           </div>
-          EST. 1997 — KARACHI, PAKISTAN
+          EST. 1997 — SERVING PAKISTAN
         </div>
         <div style={{ display: "flex", fontSize: 76, fontWeight: 800, lineHeight: 1.05, maxWidth: 760, textTransform: "uppercase" }}>
-          Elevator Engineering, Perfected.
+          Trusted To Keep Pakistan Moving.
         </div>
         <div style={{ display: "flex", fontSize: 30, color: "#5A655F", marginTop: 28, maxWidth: 720 }}>
           Maintenance · Overhauling · Modernization · Spare Parts

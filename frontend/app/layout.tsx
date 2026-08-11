@@ -32,13 +32,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     siteName: COMPANY.name,
-    title: `${COMPANY.name} — Elevator Engineering, Perfected`,
+    title: `${COMPANY.name} — Trusted To Keep Pakistan Moving`,
     description:
       "26+ years of elevator maintenance, overhauling and modernization in Karachi, Pakistan.",
   },
   twitter: {
     card: "summary_large_image",
-    title: `${COMPANY.name} — Elevator Engineering, Perfected`,
+    title: `${COMPANY.name} — Trusted To Keep Pakistan Moving`,
   },
   robots: {
     index: true,
@@ -60,6 +60,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* warm up the media/API hosts so images and data start sooner */}
+        <link rel="preconnect" href="https://pfsosysdoqirjqaehakm.supabase.co" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://pfsosysdoqirjqaehakm.supabase.co" />
         {/* Apply the saved/system theme before first paint — prevents a flash of
             the wrong theme. Kept tiny and inline on purpose. */}
         <script

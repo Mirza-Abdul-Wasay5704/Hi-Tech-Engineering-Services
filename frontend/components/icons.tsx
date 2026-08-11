@@ -37,6 +37,16 @@ export function ServiceIcon({ icon, className = "h-7 w-7" }: { icon: string; cla
           <path d="M4 7.5l8 4.5 8-4.5M12 12v9" />
         </svg>
       );
+    case "tower":
+      // new elevator supply & installation — a shaft with a rising car
+      return (
+        <svg viewBox="0 0 24 24" className={className} {...STROKE}>
+          <path d="M5 21V4a1 1 0 011-1h12a1 1 0 011 1v17" />
+          <rect x="9" y="9" width="6" height="7" rx="0.5" />
+          <path d="M12 6.5V3.2M10.4 5l1.6-1.8L13.6 5" />
+          <path d="M3 21h18" />
+        </svg>
+      );
     default:
       return (
         <svg viewBox="0 0 24 24" className={className} {...STROKE}>

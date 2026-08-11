@@ -88,12 +88,24 @@ export default function AdminPage() {
 }
 
 function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
+  const [mode, setMode] = useState<"login" | "request" | "reset">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function onSubmit(e: React.FormEvent) {
+  function reset(to: typeof mode) {
+    setMode(to);
+    setError("");
+    setNotice("");
+    setNewPassword("");
+    setConfirmPassword("");
+  }
+
+  async function onLogin(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError("");
@@ -107,24 +119,152 @@ function LoginScreen({ onSuccess }: { onSuccess: () => void }) {
     }
   }
 
+  async function onRequestCode(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      await api("/api/auth/forgot-password", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
+      setNotice("Email verified. Choose a new password.");
+      setMode("reset");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not start the reset");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onReset(e: React.FormEvent) {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setError("The two passwords don't match.");
+      return;
+    }
+    if (newPassword.length < 8) {
+      setError("Use at least 8 characters.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      await api("/api/auth/reset-password", {
+        method: "POST",
+        body: JSON.stringify({ email, new_password: newPassword }),
+      });
+      setPassword("");
+      reset("login");
+      setNotice("Password updated. Sign in with your new password.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not reset the password");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const header = (
+    <div className="flex items-center gap-3">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo.png" alt="Hi-Tech Engineering Services" className="h-10 w-auto" />
+      <div>
+        <h1 className="font-[family-name:var(--font-big-shoulders)] text-lg font-bold uppercase tracking-wide">Site Manager</h1>
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)]">
+          {mode === "login" ? "Admin login" : "Password reset"}
+        </p>
+      </div>
+    </div>
+  );
+
+  const messages = (
+    <>
+      {notice && <p className="text-sm text-[var(--green)]">{notice}</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
+    </>
+  );
+
   return (
     <div className="flex min-h-screen items-center justify-center px-5">
-      <form onSubmit={onSubmit} className="card w-full max-w-sm space-y-4 p-8">
-        <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Hi-Tech Engineering Services" className="h-10 w-auto" />
-          <div>
-            <h1 className="font-[family-name:var(--font-big-shoulders)] text-lg font-bold uppercase tracking-wide">Site Manager</h1>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--muted)]">Admin login</p>
-          </div>
-        </div>
-        <input className="field" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input className="field" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        {error && <p className="text-sm text-red-400">{error}</p>}
-        <button className="btn-primary w-full justify-center" disabled={busy}>
-          {busy ? "Signing in…" : "Sign In"}
-        </button>
-      </form>
+      {mode === "login" && (
+        <form onSubmit={onLogin} className="card w-full max-w-sm space-y-4 p-8">
+          {header}
+          <input className="field" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input className="field" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          {messages}
+          <button className="btn-primary w-full justify-center" disabled={busy}>
+            {busy ? "Signing in…" : "Sign In"}
+          </button>
+          <button
+            type="button"
+            onClick={() => reset("request")}
+            className="w-full text-center text-xs text-[var(--muted)] underline-offset-4 hover:text-[var(--green)] hover:underline"
+          >
+            Forgot password?
+          </button>
+        </form>
+      )}
+
+      {mode === "request" && (
+        <form onSubmit={onRequestCode} className="card w-full max-w-sm space-y-4 p-8">
+          {header}
+          <p className="text-sm leading-relaxed text-[var(--muted)]">
+            Enter the authorised admin email to set a new password.
+          </p>
+          <input
+            className="field"
+            type="email"
+            placeholder="Authorised email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          {messages}
+          <button className="btn-primary w-full justify-center" disabled={busy}>
+            {busy ? "Checking…" : "Continue"}
+          </button>
+          <button
+            type="button"
+            onClick={() => reset("login")}
+            className="w-full text-center text-xs text-[var(--muted)] underline-offset-4 hover:text-[var(--green)] hover:underline"
+          >
+            ← Back to sign in
+          </button>
+        </form>
+      )}
+
+      {mode === "reset" && (
+        <form onSubmit={onReset} className="card w-full max-w-sm space-y-4 p-8">
+          {header}
+          {messages}
+          <input
+            className="field"
+            type="password"
+            placeholder="New password (min 8 characters)"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+          <input
+            className="field"
+            type="password"
+            placeholder="Confirm new password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <button className="btn-primary w-full justify-center" disabled={busy}>
+            {busy ? "Updating…" : "Set New Password"}
+          </button>
+          <button
+            type="button"
+            onClick={() => reset("request")}
+            className="w-full text-center text-xs text-[var(--muted)] underline-offset-4 hover:text-[var(--green)] hover:underline"
+          >
+            ← Use a different email
+          </button>
+        </form>
+      )}
     </div>
   );
 }

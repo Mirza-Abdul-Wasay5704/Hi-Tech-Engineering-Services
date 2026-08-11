@@ -21,8 +21,8 @@ SETTINGS = {
         {"value": 4, "suffix": "", "label": "International Trainings (Korea)"},
         {"value": 24, "suffix": "/7", "label": "Emergency Response"},
     ],
-    "hero_title": "Elevator Engineering, Perfected.",
-    "hero_subtitle": "26 years of precision maintenance, overhauling and modernization of elevators — trusted by Karachi's most demanding buildings, from five-star hotels to hospitals and the Pakistan Stock Exchange.",
+    "hero_title": "Trusted To Keep Pakistan Moving.",
+    "hero_subtitle": "Since 1997, the country's most demanding buildings — five-star hotels, hospitals and the Pakistan Stock Exchange — have relied on us to keep their elevators safe, smooth and running.",
     "map_query": "Sohni Center, Karimabad, F.B. Area Block 4, Karachi",
 }
 
@@ -156,6 +156,30 @@ SERVICES = [
             {"q": "Can you install the parts you supply?", "a": "Yes. We are a full-service elevator engineering company: our teams supply, install, configure and test every part we sell, including parameter adjustments after installation."},
         ],
         "body": "## The part you need, without the wait\n\nA missing spare part is the most common reason an elevator stays down for weeks. We keep the critical items moving — sourced locally when quality allows, imported when it matters.\n\n### Commonly supplied parts\n\nEncoders · control cards · communication cards · inverters · complete control panels · on-cage cards · display cards · call cards · cabin guide shoes · oil cups · ATL · magnetic reed switches · all transducers and sensors · counterweight pulley rollers — and virtually any other mechanical or electrical accessory, local or imported.\n\n### Supply + installation\n\nUnlike parts traders, we are engineers. Every part we supply can be professionally installed, configured and tested by our own teams.",
+    },
+    {
+        "name": "Elevator Supply & Installation",
+        "slug": "elevator-supply-installation",
+        "icon": "tower",
+        "summary": "Complete new elevator supply and installation — next-generation machine-room-less, gearless and smart-control systems, engineered, installed and commissioned by our own teams.",
+        "answer_block": "Hi-Tech Engineering Services supplies and installs new elevators across Karachi and Pakistan — including next-generation machine-room-less (MRL) gearless systems, VVVF drives, destination-dispatch and smart-control lifts. We handle the complete project: sizing and specification, supply, shaft preparation, installation, commissioning and handover, followed by a maintenance contract from the same engineers who installed it.",
+        "seo_title": "New Elevator Supply & Installation in Karachi | MRL & Gearless Systems",
+        "seo_description": "New elevator supply and installation in Karachi, Pakistan: next-generation MRL gearless lifts, VVVF drives, smart controls. Full turnkey project — specification, installation, commissioning and maintenance.",
+        "scope_items": [
+            {"label": "Turnkey Supply", "detail": "Passenger, service, hospital-bed, panoramic and goods elevators — sized and specified for your building."},
+            {"label": "Next-Generation MRL Systems", "detail": "Machine-room-less gearless installations that save space and cut energy use significantly."},
+            {"label": "Smart Control Systems", "detail": "VVVF drives, destination dispatch, touchless and card-access integration for modern buildings."},
+            {"label": "Shaft & Civil Coordination", "detail": "We work with your architect and contractor on shaft dimensions, pit depth and headroom from day one."},
+            {"label": "Installation & Commissioning", "detail": "Erection, wiring, alignment, load testing and safety commissioning by our own supervised teams."},
+            {"label": "Handover & Aftercare", "detail": "Operator training, documentation, and a maintenance contract with the engineers who installed it."},
+        ],
+        "faq": [
+            {"q": "Do you install new elevators, or only maintain existing ones?", "a": "Both. Hi-Tech Engineering Services supplies and installs complete new elevator systems — including next-generation machine-room-less gearless lifts — and then maintains them under contract. Installation and aftercare come from the same engineering team."},
+            {"q": "What is a machine-room-less (MRL) elevator?", "a": "An MRL elevator places a compact gearless machine inside the shaft itself, so no separate machine room is needed. It frees valuable rooftop space, reduces civil cost, runs quieter and uses noticeably less energy than a traditional geared system."},
+            {"q": "Can you install elevators in an existing building?", "a": "Yes. We handle both new construction and retrofit installations in existing buildings, coordinating shaft, pit and headroom requirements with your architect or contractor before work begins."},
+            {"q": "How long does a new elevator installation take?", "a": "It depends on the building, travel height and equipment lead time. After a site survey we give a realistic schedule covering supply, installation, commissioning and handover — and we keep you updated at each stage."},
+        ],
+        "body": "## New elevators, installed by engineers who will also maintain them\n\nMost buildings buy an elevator from one company and then hunt for someone competent to service it. We do both — which means the system is specified correctly from day one and supported for its whole life by people who know every wire in it.\n\n### Next-generation systems\n\n- **Machine-room-less (MRL) gearless drives** — no separate machine room, quieter ride, lower running cost\n- **VVVF inverter control** for smooth acceleration, accurate floor leveling and lower energy bills\n- **Smart controls** — destination dispatch, touchless calls, access-card integration and modern display fixtures\n- **Panoramic, hospital-bed, goods and service elevators** for specialised requirements\n\n### A single accountable team\n\nSpecification and sizing · supply · shaft coordination with your contractor · installation · load testing and safety commissioning · operator training · maintenance contract. One company, one point of responsibility.",
     },
 ]
 

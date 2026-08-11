@@ -18,8 +18,8 @@ export const FALLBACK_SETTINGS: SiteSettings = {
     { value: 4, suffix: "", label: "International Trainings (Korea)" },
     { value: 24, suffix: "/7", label: "Emergency Response" },
   ],
-  hero_title: "Elevator Engineering, Perfected.",
+  hero_title: "Trusted To Keep Pakistan Moving.",
   hero_subtitle:
-    "26 years of precision maintenance, overhauling and modernization of elevators — trusted by Karachi's most demanding buildings, from five-star hotels to hospitals and the Pakistan Stock Exchange.",
+    "Since 1997, the country's most demanding buildings — five-star hotels, hospitals and the Pakistan Stock Exchange — have relied on us to keep their elevators safe, smooth and running.",
   map_query: "Sohni Center, Karimabad, F.B. Area Block 4, Karachi",
 };

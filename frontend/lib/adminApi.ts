@@ -33,17 +33,27 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
       ...options.headers,
     },
   });
-  if (res.status === 401) {
-    setToken(null);
-    throw new ApiError(401, "Session expired — please log in again");
-  }
   if (!res.ok) {
+    // Read the server's own message first — it's almost always the useful one
+    // (e.g. "Invalid email or password" on a failed sign-in).
     let detail = `Request failed (${res.status})`;
     try {
       const body = await res.json();
       if (typeof body.detail === "string") detail = body.detail;
     } catch {
       /* keep default */
+    }
+    if (res.status === 401) {
+      // Only a *previously signed-in* session can expire. A 401 with no token
+      // is just a bad login, so don't confuse the two.
+      if (token) {
+        setToken(null);
+        throw new ApiError(401, "Session expired — please log in again");
+      }
+      throw new ApiError(401, detail);
+    }
+    if (res.status === 429) {
+      throw new ApiError(429, "Too many attempts — please wait a minute and try again.");
     }
     throw new ApiError(res.status, detail);
   }
